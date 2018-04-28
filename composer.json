@@ -1,0 +1,21 @@
+{
+    "name": "malikzh/caregnum-kz",
+    "description": "Parser of car registration numbers of the Republic of Kazakhstan",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Malik Zharykoff",
+            "email": "cmalikz.h@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Malikzh\\": "src/"
+        }
+    }
+}
