@@ -6,6 +6,8 @@ class CaregnumKz
 {
     const TYPE_1993_REGEX = '~^([a-z])(\\d{3})([a-z]{2,3})$~';
     const TYPE_2012_REGEX = '~^(?:kz)?(\\d{3})([a-z]{2,3})(\\d{2})$~';
+    const TYPE_MOTO_1993_REGEX = '~^(\\d{4})([a-z]{2})$~';
+    const TYPE_MOTO_2012_REGEX = '~^(\\d{2})([a-z]{2})(\\d{2})$~';
 
     /**
      * Список регионов для номеров образца 1993 года
@@ -106,7 +108,7 @@ class CaregnumKz
     /**
      * Разбирает гос.номер и возвращает ответ. В случае неверного гос.номера бросит исключение.
      *
-     * @param $sRegnum Гос.номер
+     * @param string $sRegnum Гос.номер
      * @return CaregnumKzResult Результат
      * @throws CaregnumKzException В случае неверного гос.номера и иных ошибок бросит это исключение
      */
@@ -140,7 +142,32 @@ class CaregnumKz
             $oResult->regnumData = array_map('strtoupper', [$matches[1], $matches[2], $matches[3]]);
 
             $a_sRegionInfo = static::getRegionInfo2012($matches[3]);
-        } else {
+        }
+        elseif (preg_match(static::TYPE_MOTO_1993_REGEX, $sRegnum, $matches)) {
+
+            /// Порядок индексов $matches:
+            /// 1 - гос.номер (4 цифры)
+            /// 2 - гос.номер с регионом (2 буквы)
+
+            $oResult->regnumType = CaregnumKzResult::TYPE_MOTO_1993;
+            $oResult->regnumData = array_map('strtoupper', [$matches[1], $matches[2]]);
+
+            $a_sRegionInfo = static::getRegionInfo1993($matches[2][0]);
+        }
+        elseif (preg_match(static::TYPE_MOTO_2012_REGEX, $sRegnum, $matches)) {
+
+            /// Порядок индексов $matches:
+            /// 1 - гос.номер (2 цифры)
+            /// 2 - гос.номер (2 буквы)
+            /// 3 - регион (2 цифры)
+
+            $oResult->regnumType = CaregnumKzResult::TYPE_MOTO_2012;
+            $oResult->regnumData = array_map('strtoupper', [$matches[1], $matches[2], $matches[3]]);
+
+            $a_sRegionInfo = static::getRegionInfo2012($matches[3]);
+        }
+
+        else {
             throw new CaregnumKzException('Invalid car number', CaregnumKzException::CODE_INVALID_CARNUM);
         }
 

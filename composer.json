@@ -1,5 +1,6 @@
 {
     "name": "malikzh/caregnum-kz",
+    "version": "1.1",
     "description": "Parser of car registration numbers of the Republic of Kazakhstan",
     "type": "library",
     "license": "MIT",

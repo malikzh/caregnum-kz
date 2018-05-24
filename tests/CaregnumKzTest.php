@@ -16,6 +16,10 @@ class CaregnumKzTest extends PHPUnit_Framework_TestCase
     const REGNUM5 = 'KZ098PAS05';
     const REGNUM6 = '098АЕВ05'; // кириллица
 
+    // MOTO
+    const REGNUM7 = '2789ZA';
+    const REGNUM8 = '29BK04';
+
     /**
      * Тестирование функции parse
      *
@@ -160,6 +164,42 @@ class CaregnumKzTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($throwed, 'throw exception');
     }
 
+    public function testParseMoto() {
+        try {
+
+            // 1993
+            $oResult = CaregnumKz::parse(self::REGNUM7);
+
+            $this->asserts1993($oResult, [
+                'carRegnum'   => self::REGNUM7,
+                'regionName'  => CaregnumKz::$regionsNames[$oResult->regionNum],
+                'region2012'  => '01',
+                'region1993'  => 'Z',
+                'regnumType'  => \Malikzh\CaregnumKzResult::TYPE_MOTO_1993,
+                'regnumData'  => [
+                    '2789', 'ZA'
+                ]
+            ], 0);
+
+
+            // 2012
+            $oResult = CaregnumKz::parse(self::REGNUM8);
+
+            $this->asserts1993($oResult, [
+                'carRegnum'   => self::REGNUM8,
+                'regionName'  => CaregnumKz::$regionsNames[$oResult->regionNum],
+                'region2012'  => '04',
+                'region1993'  => 'D',
+                'regnumType'  => \Malikzh\CaregnumKzResult::TYPE_MOTO_2012,
+                'regnumData'  => [
+                    '29', 'BK', '04'
+                ]
+            ], 0);
+        } catch (\Malikzh\CaregnumKzException $e) {
+            throw $e;
+        }
+    }
+
     /**
      * Осуществляет проверку возврата
      *
@@ -176,6 +216,8 @@ class CaregnumKzTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($oResult->regnumType, $expected['regnumType'], sprintf('Test #%d: Check regnumType', $num));
         $this->assertEquals($oResult->regnumData[0], $expected['regnumData'][0], sprintf('Test #%d: Check regnumData[0]', $num));
         $this->assertEquals($oResult->regnumData[1], $expected['regnumData'][1], sprintf('Test #%d: Check regnumData[1]', $num));
-        $this->assertEquals($oResult->regnumData[2], $expected['regnumData'][2], sprintf('Test #%d: Check regnumData[2]', $num));
+
+        if (isset($expected['regnumData'][2]))
+            $this->assertEquals($oResult->regnumData[2], $expected['regnumData'][2], sprintf('Test #%d: Check regnumData[2]', $num));
     }
 }

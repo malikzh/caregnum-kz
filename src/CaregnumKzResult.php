@@ -23,6 +23,8 @@ class CaregnumKzResult
     const TYPE_UNKNOWN    = 0;
     const TYPE_2012       = 1;
     const TYPE_1993       = 2;
+    const TYPE_MOTO_1993  = 3;
+    const TYPE_MOTO_2012  = 4;
 
     public $carRegNum     = '';
 
